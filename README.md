@@ -38,8 +38,36 @@ DB_PASSWORD=
 
 ### Products
 **Show all products**
-**`GET`** ` /products`
+**`GET`** ` /products` `?limit=2` `&page=1` `&sort=id.asc` `&filter[name]=Fresh`
 
+##### Example Response:
+```json
+[
+	"code": 200,
+	"data": [
+		{
+			"id": 1,
+			"name": "Juice",
+			"price": 2000,
+			"category_id": 1,
+			"description": "Fresh Juice",
+			"image": "public/images/image-1579661507990.jpeg",
+			"created_at": "2020-01-22T02:51:48.000Z",
+			"updated_at": "2020-01-22T02:51:48.000Z"
+		},
+		{
+			"id": 2,
+			"name": "Tea",
+			"price": 2000,
+			"category_id": 1,
+			"description": "Fresh Tea",
+			"image": "public/images/image-1579661516758.jpeg",
+			"created_at": "2020-01-22T02:51:56.000Z",
+			"updated_at": "2020-01-22T02:51:56.000Z"
+		}
+	]
+]
+```
 
 **Sorting, Filtering, & Pagination**
 >Supported query parameters:
