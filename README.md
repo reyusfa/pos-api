@@ -72,11 +72,11 @@ DB_PASSWORD=
 
 **Sorting, Filtering, & Pagination**
 >Supported query parameters:
-`?sort=name.desc` //All field can be sorted
-`?filter[name]=`
-`?limit=80`
-`?limit=10&page=2`
-`?limit=10&offset=30`
+>`?sort=name.desc` //All field can be sorted
+>`?filter[name]=`
+>`?limit=80`
+>`?limit=10&page=2`
+>`?limit=10&offset=30`
 
 **Show data product by id**
 **`GET`** `/products/:id`
