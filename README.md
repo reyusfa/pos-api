@@ -79,7 +79,14 @@ now connected to database...
 
 ### Products
 
-**Show all data products**
+Endpoint list
+- **`GET`** ` /products` 
+- **`GET`** `/products/:id`
+- **`POST`** `/products`
+- **`PUT`** `/products/:id`
+- **`DELETE`** `/products/:id`
+
+#### Show all data products
 
 **`GET`** ` /products` 
 
@@ -121,7 +128,7 @@ Supported query parameters:
 - `?limit=10&page=2`
 - `?limit=10&offset=30`
 
-**Show data product by id**
+#### Show data product by id
 
 **`GET`** `/products/:id`
 
@@ -142,7 +149,7 @@ Supported query parameters:
 }
 ```
 
-**Add data product**
+#### Add data product
 
 **`POST`** `/products`
 
@@ -165,7 +172,7 @@ Content-Type: application/json
 }
 ```
 
-**Update data product by id**
+#### Update data product by id
 
 **`PUT`** `/products/:id`
 
@@ -185,7 +192,7 @@ Content-Type: application/json
 }
 ```
 
-**Delete data product by id**
+#### Delete data product by id
 
 **`DELETE`** `/products/:id`
 
@@ -207,7 +214,14 @@ Content-Type: application/json
 
 ### Categories
 
-**Show all data categories**
+Endpoint list:
+- **`GET`** `/categories`
+- **`GET`** `/categories/:id`
+- **`POST`** `/categories`
+- **`PUT`** `/categories/:id`
+- **`DELETE`** `/categories/:id`
+
+#### Show all data categories
 
 **`GET`** `/categories`
 
@@ -232,7 +246,7 @@ Content-Type: application/json
 }
 ```
 
-**Show data category by id**
+#### Show data category by id
 
 **`GET`** `/categories/:id`
 
@@ -249,7 +263,7 @@ Content-Type: application/json
 }
 ```
 
-**Add data category**
+#### Add data category
 
 **`POST`** `/categories`
 
@@ -269,7 +283,7 @@ Content-Type: application/json
 }
 ```
 
-**Edit data category by id**
+#### Edit data category by id
 
 **`PUT`** `/categories/:id`
 
@@ -289,7 +303,9 @@ Content-Type: application/json
 }
 ```
 
-**Delete data category by id**
+#### Delete data category by id
+
+**`DELETE`** `/categories/:id`
 
 ##### Request Header
 ```
@@ -309,7 +325,15 @@ Content-Type: application/json
 
 ### Orders
 
-**Show all data orders**
+Endpoint list:
+- **`GET`** `/orders`
+- **`GET`** `/orders/:id`
+- **`GET`** `/orders/:id/items`
+- **`GET`** `/orders/:id/items/:id_item`
+- **`POST`** `/orders`
+- **`DELETE`** `/orders/:id`
+
+#### Show all data orders
 
 **`GET`** `/orders`
 
@@ -338,7 +362,7 @@ Content-Type: application/json
 }
 ```
 
-**Show data order by id**
+#### Show data order by id
 
 **`GET`** `/orders/:id`
 
@@ -357,15 +381,15 @@ Content-Type: application/json
 }
 ```
 
-**Show items of order by id**
+#### Show items of order by id
 
 **`GET`** `/orders/:id/items`
 
-**Show items detail of order**
+#### Show items detail of order
 
 **`GET`** `/orders/:id/items/:id_item`
 
-**Add data order**
+#### Add data order
 
 **`POST`** `/orders`
 
@@ -391,7 +415,9 @@ Content-Type: application/json
 }
 ```
 
-**Delete data order**
+#### Delete data order
+
+**`DELETE`** `/orders/:id`
 
 ##### Request Header
 ```
@@ -412,27 +438,29 @@ Content-Type: application/json
 ## Work in Progress
 
 ### Users
-~~**Show all data users**~~
+
+#### ~~Show all data users~~
 
 ~~**`GET`** `/users`~~
 
-~~**Show data user by id**~~
+#### ~~Show data user by id~~
 
 ~~**`GET`** `/users/:id`~~
 
-~~**Update data user by id**~~
+#### ~~Update data user by id~~
 
 ~~**`PUT`** `/users/:id`~~
 
-~~**Delete data user by id**~~
+#### ~~Delete data user by id~~
 
 ~~**`DELETE`** `/users/:id`~~
 
 ### Login & Register
-~~**Register user**~~
+
+#### ~~Register user~~
 
 ~~**`POST`** `/register`~~
 
-~~**Login user**~~
+#### ~~Login user~~
 
 ~~**`POST`** `/login`~~
