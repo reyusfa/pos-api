@@ -4,6 +4,32 @@ This project created for learning purpose of how to make an API using nodejs and
 
 ## Getting Started
 
+### Requirements
+  - NodeJS
+  - NPM
+  - Yarn
+  - XAMPP / MySQL
+
+Make sure to install the latest version.
+
+### Setting Server & Database
+
+1. Install XAMPP / MySQL.
+2. Create new database.
+3. Import file `point_of_sale.sql` to your database.
+4. Edit file .env to configure Server & MySQL connection.
+
+```
+SERVER_HOST=127.0.0.1
+SERVER_PORT=3001
+DB_HOST=127.0.0.1
+DB_NAME=point_of_sale
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### Start Server
+
 Clone and install dependencies
 ```shell
 > git clone https://github.com/reyusfa/pos-api.git
@@ -17,30 +43,13 @@ now listening on http://127.0.0.1:3001
 now connected to database...
 ```
 
-### Requirements
-  - NodeJS
-  - NPM
-  - Yarn
-  - MySQL
-
-Make sure to install the latest version.
-### Setting Server & Database
-Edit file .env to configure Server & MySQL connection.
-```
-SERVER_HOST=127.0.0.1
-SERVER_PORT=3001
-DB_HOST=127.0.0.1
-DB_NAME=point_of_sale
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
 ## Folder Structures
 
 ```
 ├── index.js
 ├── node_modules
 ├── package.json
+├── point_of_sale.sql
 ├── public
 │   └── images
 ├── README.md
@@ -66,10 +75,12 @@ DB_PASSWORD=
         └── products.js
 ```
 
-## API Reference
+## API Documentation
 
 ### Products
+
 **Show all data products**
+
 **`GET`** ` /products` 
 
 ##### Example Response:
@@ -111,6 +122,7 @@ Supported query parameters:
 - `?limit=10&offset=30`
 
 **Show data product by id**
+
 **`GET`** `/products/:id`
 
 ##### Example Response:
@@ -131,6 +143,7 @@ Supported query parameters:
 ```
 
 **Add data product**
+
 **`POST`** `/products`
 
 ##### Request Header
@@ -153,6 +166,7 @@ Content-Type: application/json
 ```
 
 **Update data product by id**
+
 **`PUT`** `/products/:id`
 
 ##### Request Header
@@ -172,6 +186,7 @@ Content-Type: application/json
 ```
 
 **Delete data product by id**
+
 **`DELETE`** `/products/:id`
 
 ##### Request Header
@@ -191,7 +206,9 @@ Content-Type: application/json
 ```
 
 ### Categories
+
 **Show all data categories**
+
 **`GET`** `/categories`
 
 ##### Example Response:
@@ -216,6 +233,7 @@ Content-Type: application/json
 ```
 
 **Show data category by id**
+
 **`GET`** `/categories/:id`
 
 ##### Example Response:
@@ -232,6 +250,7 @@ Content-Type: application/json
 ```
 
 **Add data category**
+
 **`POST`** `/categories`
 
 ##### Request Header
@@ -251,6 +270,7 @@ Content-Type: application/json
 ```
 
 **Edit data category by id**
+
 **`PUT`** `/categories/:id`
 
 ##### Request Header
@@ -288,7 +308,9 @@ Content-Type: application/json
 ```
 
 ### Orders
+
 **Show all data orders**
+
 **`GET`** `/orders`
 
 ##### Example Response:
@@ -317,6 +339,7 @@ Content-Type: application/json
 ```
 
 **Show data order by id**
+
 **`GET`** `/orders/:id`
 
 ##### Example Response:
@@ -335,12 +358,15 @@ Content-Type: application/json
 ```
 
 **Show items of order by id**
+
 **`GET`** `/orders/:id/items`
 
 **Show items detail of order**
+
 **`GET`** `/orders/:id/items/:id_item`
 
 **Add data order**
+
 **`POST`** `/orders`
 
 ##### Request Header
@@ -387,20 +413,26 @@ Content-Type: application/json
 
 ### Users
 ~~**Show all data users**~~
+
 ~~**`GET`** `/users`~~
 
 ~~**Show data user by id**~~
+
 ~~**`GET`** `/users/:id`~~
 
 ~~**Update data user by id**~~
+
 ~~**`PUT`** `/users/:id`~~
 
 ~~**Delete data user by id**~~
+
 ~~**`DELETE`** `/users/:id`~~
 
 ### Login & Register
 ~~**Register user**~~
+
 ~~**`POST`** `/register`~~
 
 ~~**Login user**~~
+
 ~~**`POST`** `/login`~~
