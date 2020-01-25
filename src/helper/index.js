@@ -74,14 +74,14 @@ const paginationQueries = (urlQueries) => {
 
 const jsonResponse = (response, data, status = 200) => {
   const result = {};
-  result.code = status;
+  result.status = status;
   result.data = data;
   return response.status(status).json(result);
 };
 
 const jsonError = (response, error, status = 400) => {
   const result = {};
-  result.code = status;
+  result.status = status;
   result.error = error;
   return response.status(status).json(result);
 };

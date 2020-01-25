@@ -15,13 +15,13 @@ const {
 const getAllCategories = async (req, res) => {
   const urlQueries = req.query;
   const result = await selectAllCategories(urlQueries);
-  jsonResponse(res, result);
+  return jsonResponse(res, result);
 };
 
 const getCategory = async (req, res) => {
   const { id } = req.params;
   const result = await selectDataCategory(id);
-  jsonResponse(res, result[0]);
+  return jsonResponse(res, result[0]);
 };
 
 const postCategory = async (req, res) => {
@@ -33,10 +33,9 @@ const postCategory = async (req, res) => {
       id,
       ...data
     };
-    jsonResponse(res, result);
+    return jsonResponse(res, result);
   } catch(error) {
-    jsonError(res, errorBadRequest);
-    throw new Error(error);
+    return jsonError(res, errorBadRequest);
   }
 };
 
@@ -44,29 +43,51 @@ const putCategory = async (req, res) => {
   try {
     let data = req.body;
     const { id } = req.params;
-    await updateDataCategory(data, id);
-    const result = {
-      id,
-      ...data
-    };
-    jsonResponse(res, result);
+    await selectDataCategory(id).then(async category => {
+      if(category.id) {
+        await updateDataCategory(data, id);
+        const result = {
+          id,
+          ...data
+        };
+        return jsonResponse(res, result);
+      } else {
+        return jsonError(res, errorBadRequest);
+      }
+    }).catch(() =>  {
+      const error = {
+        code: 400,
+        message: `Data category does not exist!`
+      };
+      return jsonError(res, error);
+    });
   } catch(error) {
-    jsonError(res, errorBadRequest);
-    throw new Error(error);
+    return jsonError(res, errorBadRequest);
   }
 };
 
 const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    await deleteDataCategory(id);
-    const result = {
-      id
-    };
-    jsonResponse(res, result);
+    await selectDataCategory(id).then(async category => {
+      if(category.id) {
+        await deleteDataCategory(id);
+        const result = {
+          ...category
+        };
+        return jsonResponse(res, result);
+      } else {
+        return jsonError(res, errorBadRequest);
+      }
+    }).catch(() =>  {
+      const error = {
+        code: 400,
+        message: `Data category does not exist!`
+      };
+      return jsonError(res, error);
+    });
   } catch(error) {
-    jsonError(res, errorBadRequest);
-    throw new Error(error);
+    return jsonError(res, errorBadRequest);
   }
 };
 

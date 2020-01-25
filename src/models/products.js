@@ -1,5 +1,6 @@
 const fs = require('fs');
 const connection = require('../config/mysql');
+
 const {
   dbQuery,
   filterQueries,
@@ -7,8 +8,10 @@ const {
   sortQueries
 } = require('../helper');
 
+const allowedFields = ['name', 'description'];
+
 const selectAllProducts = (urlQueries) => {
-  const queryParams = filterQueries(urlQueries, ['name']) + sortQueries(urlQueries) + paginationQueries(urlQueries);
+  const queryParams = filterQueries(urlQueries, allowedFields) + sortQueries(urlQueries) + paginationQueries(urlQueries);
   const query = `SELECT * FROM products${queryParams}`;
   return new Promise((resolve, reject) => {
     connection.query(query, (error, result) => {
@@ -22,11 +25,11 @@ const selectAllProducts = (urlQueries) => {
 };
 
 const selectDataProduct = (id) => {
-  const query = `SELECT * FROM products WHERE id=?`;
+  const query = `SELECT * FROM products WHERE id = ?`;
   return new Promise((resolve, reject) => {
     connection.query(query, [id], (error, result) => {
       if(!error) {
-        resolve(result);
+        resolve(result[0]);
       }
     }).on('error', (error) => {
       reject(new Error(error));
@@ -48,7 +51,7 @@ const insertDataProduct = (data) => {
 };
 
 const selectProductImage = (id) => {
-  const query = `SELECT image FROM products WHERE id=?`;
+  const query = `SELECT image FROM products WHERE id = ?`;
   return new Promise((resolve, reject) => {
     connection.query(query, [id], (error, result) => {
       if(!error) {
@@ -61,7 +64,7 @@ const selectProductImage = (id) => {
 };
 
 const selectProductPrice = (id) => {
-  const query = `SELECT price FROM products WHERE id=?`;
+  const query = `SELECT price FROM products WHERE id = ?`;
   return new Promise((resolve, reject) => {
     connection.query(query, [id], (error, result) => {
       if(!error) {
@@ -74,13 +77,12 @@ const selectProductPrice = (id) => {
 };
 
 const updateDataProduct = (data, id) => {
-  const query = `UPDATE products SET ? WHERE id=?`;
+  const query = `UPDATE products SET ? WHERE id = ?`;
   const result = selectProductImage(id).then(res => {
     const { image } = res;
-    if(image) {
+    if(image && image !== '' && data.image) {
       fs.unlink(image, (error) => {
         if(error) throw new Error(error);
-        console.log(`${image} is deleted!`);
       });
     }
     return dbQuery(connection, query, [data, id]).catch(error => {
@@ -93,13 +95,12 @@ const updateDataProduct = (data, id) => {
 };
 
 const deleteDataProduct = (id) => {
-  const query = `DELETE FROM products WHERE id=?`;
+  const query = `DELETE FROM products WHERE id = ?`;
   const result = selectProductImage(id).then(res => {
     const { image } = res;
-    if(image) {
+    if(image && image !== '') {
       fs.unlink(image, (error) => {
         if(error) throw new Error(error);
-        console.log(`${image} is deleted!`);
       });
     }
     return dbQuery(connection, query, [id]).catch(error => {

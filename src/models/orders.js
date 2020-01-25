@@ -1,13 +1,15 @@
 const connection = require('../config/mysql');
+
 const {
-  dbQuery,
   filterQueries,
   paginationQueries,
   sortQueries
 } = require('../helper');
 
+const allowedFields = ['reference'];
+
 const selectAllOrders = (urlQueries) => {
-  const queryParams = filterQueries(urlQueries, ['reference']) + sortQueries(urlQueries) + paginationQueries(urlQueries);
+  const queryParams = filterQueries(urlQueries, allowedFields) + sortQueries(urlQueries) + paginationQueries(urlQueries);
   const query = `SELECT * FROM orders${queryParams}`;
   return new Promise((resolve, reject) => {
     connection.query(query, (error, result) => {
@@ -61,7 +63,7 @@ const selectAllOrders = (urlQueries) => {
 };
 
 const selectDataOrder = (id) => {
-  const query = `SELECT * FROM orders WHERE id=?`;
+  const query = `SELECT * FROM orders WHERE id = ?`;
   return new Promise((resolve, reject) => {
     connection.query(query, [id], (error, result) => {
       if(!error) {
@@ -87,7 +89,7 @@ const insertDataOrder = (data) => {
 };
 
 const updateDataOrder = (data, id) => {
-  const query = `UPDATE orders SET ? WHERE id=?`;
+  const query = `UPDATE orders SET ? WHERE id = ?`;
   return new Promise((resolve, reject) => {
     connection.query(query, [data, id], (error, result) => {
       if(!error) {
@@ -100,7 +102,7 @@ const updateDataOrder = (data, id) => {
 };
 
 const deleteDataOrder = (id) => {
-  const query = `DELETE FROM orders WHERE id=?`;
+  const query = `DELETE FROM orders WHERE id = ?`;
   return new Promise((resolve, reject) => {
     connection.query(query, [id], (error, result) => {
       if(!error) {
@@ -115,7 +117,7 @@ const deleteDataOrder = (id) => {
 const selectAllOrderItems = (params) => {
   const queryParams = sortQueries(params) + paginationQueries(params);
   const { order_id } = params;
-  const query = `SELECT * FROM order_details WHERE order_id=?${queryParams}`;
+  const query = `SELECT * FROM order_details WHERE order_id = ?${queryParams}`;
   return new Promise((resolve, reject) => {
     connection.query(query, [order_id], (error, result) => {
       if(!error) {
@@ -128,7 +130,7 @@ const selectAllOrderItems = (params) => {
 };
 
 const selectDataOrderItem = (id) => {
-  const query = `SELECT * FROM order_details WHERE id=?`;
+  const query = `SELECT * FROM order_details WHERE id = ?`;
   return new Promise((resolve, reject) => {
     connection.query(query, [id], (error, result) => {
       if(!error) {
@@ -157,7 +159,7 @@ const insertDataOrderItem = (data) => {
 // };
 
 const deleteDataOrderItem = (id) => {
-  const query = `DELETE FROM order_details WHERE order_id=?`;
+  const query = `DELETE FROM order_details WHERE order_id = ?`;
   return new Promise((resolve, reject) => {
     connection.query(query, [id], (error, result) => {
       if(!error) {

@@ -1,5 +1,6 @@
 const express = require('express');
-const Route = express.Router();
+const Router = express.Router();
+
 const {
   getAllProducts,
   getProduct,
@@ -7,13 +8,14 @@ const {
   putProduct,
   deleteProduct
 } = require('../controller/products');
+
 const { uploadFile } = require('../middleware/files');
 
-Route
+Router
   .get('/', getAllProducts)
   .get('/:id', getProduct)
   .post('/', uploadFile('image'), postProduct)
   .put('/:id', uploadFile('image'), putProduct)
   .delete('/:id', deleteProduct);
 
-module.exports = Route;
+module.exports = Router;

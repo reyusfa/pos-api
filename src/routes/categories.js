@@ -1,5 +1,6 @@
 const express = require('express');
-const Route = express.Router();
+const Router = express.Router();
+
 const {
   getAllCategories,
   getCategory,
@@ -8,11 +9,13 @@ const {
   deleteCategory
 } = require('../controller/categories');
 
-Route
+const { categoryValidation } = require('../middleware/validation');
+
+Router
   .get('/', getAllCategories)
   .get('/:id', getCategory)
-  .post('/', postCategory)
-  .put('/:id', putCategory)
+  .post('/', categoryValidation, postCategory)
+  .put('/:id', categoryValidation, putCategory)
   .delete('/:id', deleteCategory);
 
-module.exports = Route;
+module.exports = Router;

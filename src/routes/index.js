@@ -1,12 +1,18 @@
 const express = require('express');
-const Route = express.Router();
-const products = require('./products');
+const Router = express.Router();
+
+const authorization = require('../middleware/authorization');
+const authentication = require('./authentication');
 const categories = require('./categories');
+const products = require('./products');
 const orders = require('./orders');
+const users = require('./users');
 
-Route
-  .use('/products', products)
-  .use('/categories', categories)
-  .use('/orders', orders);
+Router
+  .use('/categories', authorization, categories)
+  .use('/products', authorization, products)
+  .use('/orders', authorization, orders)
+  .use('/users', authorization, users)
+  .use('/', authentication);
 
-module.exports = Route;
+module.exports = Router;

@@ -1,4 +1,5 @@
 const randomId = require('random-id');
+
 const {
   selectAllOrders,
   selectDataOrder,
@@ -33,13 +34,13 @@ const {
 const getAllOrders = async (req, res) => {
   const urlQueries = req.query;
   const result = await selectAllOrders(urlQueries);
-  jsonResponse(res, result);
+  return jsonResponse(res, result);
 };
 
 const getOrder = async (req, res) => {
   const { id } = req.params;
   const result = await selectDataOrder(id);
-  jsonResponse(res, result);
+  return jsonResponse(res, result);
 };
 
 const postOrder = async (req, res) => {
@@ -48,16 +49,13 @@ const postOrder = async (req, res) => {
     orders.map(order => {
       const { product_id, quantity } = order;
       if(!product_id || !quantity) {
-        jsonError(res, errorBadRequest);
-        throw new Error('Missing parameters!');
+        return jsonError(res, errorBadRequest);
       }
       if(quantity < 1) {
-        jsonError(res, errorBadRequest);
-        throw new Error('Invalid parameters!');
+        return jsonError(res, errorBadRequest);
       }
       if(!res.body && !user_id || !orders) {
-        jsonError(res, errorBadRequest);
-        throw new Error('Missing parameters!');
+        return jsonError(res, errorBadRequest);
       }
     });
     const dataOrders = {
@@ -92,13 +90,12 @@ const postOrder = async (req, res) => {
       };
       await updateDataOrder({ total }, id);
       console.log(result);
-      jsonResponse(res, result);
+      return jsonResponse(res, result);
     }).catch(error => {
       throw new Error(error);
     });
   } catch(error) {
-    jsonError(res, errorBadRequest);
-    throw new Error(error);
+    return jsonError(res, errorBadRequest);
   }
 };
 
@@ -110,10 +107,9 @@ const deleteOrder = async (req, res) => {
     const result = {
       id
     };
-    jsonResponse(res, result);
+    return jsonResponse(res, result);
   } catch(error) {
-    jsonError(res, errorBadRequest);
-    throw new Error(error);
+    return jsonError(res, errorBadRequest);
   }
 };
 
@@ -121,13 +117,13 @@ const getAllOrderItems = async (req, res) => {
   let urlQueries = req.query;
   urlQueries.order_id = req.params.id;
   const result = await selectAllOrderItems(urlQueries);
-  jsonResponse(res, result);
+  return jsonResponse(res, result);
 };
 
 const getOrderItem = async (req, res) => {
   const { id } = req.params;
   const result = await selectDataOrderItem(id);
-  jsonResponse(res, result);
+  return jsonResponse(res, result);
 };
 
 // const postOrderItem = async (req, res) => {
