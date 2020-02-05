@@ -11,7 +11,7 @@ const dbQuery = (connection, query, data) => {
   });
 };
 
-const filterQueries = (urlQueries, allowedFields) => {
+const filterQueries = (urlQueries, allowedFields, prefix = '') => {
   const { filter } = urlQueries;
   if(!filter || Object.keys(filter).length == 0) return '';
 
@@ -30,22 +30,22 @@ const filterQueries = (urlQueries, allowedFields) => {
       //   if(operator === 'lte') return `${k} <= ${value}`;
       //   if(operator === 'gte') return `${k} >= ${value}`;
       // }
-      return `${k} LIKE '%${filter[k]}%'`;
+      return `${prefix}${k} LIKE '%${filter[k]}%'`;
     }
   }).filter(Boolean).join(' AND ');
 
-  let result = filters !== '' ? ` WHERE ${result}` : '';
+  let result = filters !== '' ? ` WHERE ${filters}` : '';
   return result;
 };
 
-const sortQueries = (urlQueries) => {
+const sortQueries = (urlQueries, prefix = '') => {
   const { sort } = urlQueries;
   if(!sort) return '';
 
   const sortParams = sort.split(',').map(r => {
     let field = r.split('.')[0];
     let order = r.split('.')[1].toUpperCase();
-    return `${field} ${order}`;
+    return `${prefix}${field} ${order}`;
   }).join(', ');
 
   const result = ` ORDER BY ${sortParams}`;
@@ -72,17 +72,28 @@ const paginationQueries = (urlQueries) => {
   return result;
 };
 
+const jsonResponseWithPagination = (response, data, pagination, status = 200) => {
+  const result = {
+    status,
+    data,
+    pagination
+  };
+  return response.status(status).json(result);
+};
+
 const jsonResponse = (response, data, status = 200) => {
-  const result = {};
-  result.status = status;
-  result.data = data;
+  const result = {
+    status,
+    data
+  };
   return response.status(status).json(result);
 };
 
 const jsonError = (response, error, status = 400) => {
-  const result = {};
-  result.status = status;
-  result.error = error;
+  const result = {
+    status,
+    error
+  };
   return response.status(status).json(result);
 };
 
@@ -96,6 +107,7 @@ module.exports = {
   filterQueries,
   paginationQueries,
   sortQueries,
+  jsonResponseWithPagination,
   jsonResponse,
   jsonError,
   errorBadRequest

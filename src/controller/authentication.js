@@ -1,5 +1,6 @@
 const {
-  selectUserLogin
+  selectUserLogin,
+  insertUserRegister
 } = require('../models/authentication');
 
 const {
@@ -23,6 +24,30 @@ const loginUser = async (req, res) => {
   }
 };
 
+const registerUser = async (req, res) => {
+  try {
+    const { username, password, email, name } = req.body;
+    const newPassword = password //await bcrypt.hash(password, 10);
+    const data = {
+      username,
+      email,
+      name,
+      password: newPassword
+    };
+    const query = await insertUserRegister(data);
+    const id = query.insertId;
+    const result = {
+      id,
+      ...data
+    };
+    delete result.password;
+    return jsonResponse(res, result);
+  } catch(error) {
+    return jsonError(res, error);
+  }
+};
+
 module.exports = {
-  loginUser
+  loginUser,
+  registerUser
 };

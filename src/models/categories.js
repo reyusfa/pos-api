@@ -12,10 +12,29 @@ const allowedFields = ['name'];
 const selectAllCategories = (urlQueries) => {
   const queryParams = filterQueries(urlQueries, allowedFields) + sortQueries(urlQueries) + paginationQueries(urlQueries);
   const query = `SELECT * FROM categories${queryParams}`;
-  const result = dbQuery(connection, query).catch(error => {
-    throw new Error(error);
+  return new Promise((resolve, reject) => {
+    connection.query(query, (error, result) => {
+      if(!error) {
+        resolve(result);
+      }
+    }).on('error', (error) => {
+      reject(new Error(error));
+    });
   });
-  return result;
+};
+
+const countCategories = (urlQueries) => {
+  const queryParams = filterQueries(urlQueries, allowedFields) + sortQueries(urlQueries) + paginationQueries(urlQueries);
+  const query = `SELECT COUNT(*) AS total_items FROM categories${queryParams}`;
+  return new Promise((resolve, reject) => {
+    connection.query(query, (error, result) => {
+      if(!error) {
+        resolve(result[0]);
+      }
+    }).on('error', (error) => {
+      reject(new Error(error));
+    });
+  });
 };
 
 const selectDataCategory = (id) => {
@@ -57,6 +76,7 @@ const deleteDataCategory = (id) => {
 
 module.exports = {
   selectAllCategories,
+  countCategories,
   selectDataCategory,
   insertDataCategory,
   updateDataCategory,

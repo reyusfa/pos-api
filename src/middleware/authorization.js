@@ -3,7 +3,7 @@ const { jsonError } = require('../helper');
 
 const authorization = (req, res, next) => {
   const token = req.headers.authorization;
-  jwt.verify(token, 'SECRET_KEY', (error) => {
+  jwt.verify(token, process.env.SECRET_KEY, (error) => {
     if(error) {
       const errorResponse = {
         code: 401,
@@ -17,3 +17,4 @@ const authorization = (req, res, next) => {
 };
 
 module.exports = authorization;
+

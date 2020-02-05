@@ -6,6 +6,7 @@ const { userValidation } = require('../middleware/validation');
 
 const {
   getAllUsers,
+  getAllRoles,
   getUser,
   postUser,
   putUser,
@@ -14,6 +15,7 @@ const {
 
 Router
   .get('/', getAllUsers)
+  .get('/roles', getAllRoles)
   .get('/:id', getUser)
   .post('/', asyncHandler(userValidation), postUser)
   .put('/:id', putUser)

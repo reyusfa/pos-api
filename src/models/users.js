@@ -6,14 +6,27 @@ const {
   sortQueries
 } = require('../helper');
 
-const allowedFields = ['username', 'email', 'name'];
+const allowedFields = ['username', 'email', 'name', 'role_id'];
 
-const selectAllUsers = urlQueries => {
+const selectAllUsers = (urlQueries) => {
   const queryParams =
-    filterQueries(urlQueries, allowedFields) +
-    sortQueries(urlQueries) +
+    filterQueries(urlQueries, allowedFields, 'u.') +
+    sortQueries(urlQueries, 'u.') +
     paginationQueries(urlQueries);
-  const query = `SELECT * FROM users${queryParams}`;
+  const query = `
+    SELECT
+      u.id,
+      u.username,
+      u.email,
+      u.name,
+      u.created_at,
+      u.updated_at,
+      u.role_id,
+      r.name AS role_name
+    FROM users AS u
+    INNER JOIN roles AS r
+      ON u.role_id = r.id
+    ${queryParams}`;
   return new Promise((resolve, reject) => {
     connection
       .query(query, (error, result) => {
@@ -27,11 +40,32 @@ const selectAllUsers = urlQueries => {
   });
 };
 
-const selectDataUser = id => {
-  const query = `SELECT * FROM users WHERE id = ?`;
+const countUsers = (urlQueries) => {
+  const queryParams = filterQueries(urlQueries, allowedFields) + sortQueries(urlQueries) + paginationQueries(urlQueries);
+  const query = `SELECT COUNT(*) AS total_items FROM users${queryParams}`;
+  return new Promise((resolve, reject) => {
+    connection.query(query, (error, result) => {
+      if(!error) {
+        resolve(result[0]);
+      }
+    }).on('error', (error) => {
+      reject(new Error(error));
+    });
+  });
+};
+
+const selectAllRoles = (urlQueries) => {
+  const queryParams =
+    filterQueries(urlQueries, ['name']) +
+    sortQueries(urlQueries) +
+    paginationQueries(urlQueries);
+  const query = `
+    SELECT *
+    FROM roles
+    ${queryParams}`;
   return new Promise((resolve, reject) => {
     connection
-      .query(query, [id], (error, result) => {
+      .query(query, (error, result) => {
         if (!error) {
           resolve(result);
         }
@@ -42,7 +76,36 @@ const selectDataUser = id => {
   });
 };
 
-const insertDataUser = data => {
+const countRoles = (urlQueries) => {
+  const queryParams = filterQueries(urlQueries, ['name']) + sortQueries(urlQueries) + paginationQueries(urlQueries);
+  const query = `SELECT COUNT(*) AS total_items FROM roles${queryParams}`;
+  return new Promise((resolve, reject) => {
+    connection.query(query, (error, result) => {
+      if(!error) {
+        resolve(result[0]);
+      }
+    }).on('error', (error) => {
+      reject(new Error(error));
+    });
+  });
+};
+
+const selectDataUser = (id) => {
+  const query = `SELECT id, username, email, name, created_at, updated_at FROM users WHERE id = ?`;
+  return new Promise((resolve, reject) => {
+    connection
+      .query(query, [id], (error, result) => {
+        if (!error) {
+          resolve(result[0]);
+        }
+      })
+      .on('error', error => {
+        reject(new Error(error));
+      });
+  });
+};
+
+const insertDataUser = (data) => {
   const query = `INSERT INTO users SET ?`;
   return new Promise((resolve, reject) => {
     connection
@@ -72,7 +135,7 @@ const updateDataUser = (data, id) => {
   });
 };
 
-const deleteDataUser = id => {
+const deleteDataUser = (id) => {
   const query = `DELETE FROM users WHERE id = ?`;
   return new Promise((resolve, reject) => {
     connection
@@ -87,7 +150,7 @@ const deleteDataUser = id => {
   });
 };
 
-const checkUsername = match => {
+const checkUsername = (match) => {
   const query = `SELECT username FROM users WHERE username = ?`;
   return new Promise((resolve, reject) => {
     connection
@@ -109,7 +172,7 @@ const checkUsername = match => {
   });
 };
 
-const checkEmail = match => {
+const checkEmail = (match) => {
   const query = `SELECT email FROM users WHERE email = ?`;
   return new Promise((resolve, reject) => {
     connection
@@ -148,6 +211,9 @@ const selectIdUser = (field, match) => {
 
 module.exports = {
   selectAllUsers,
+  countUsers,
+  selectAllRoles,
+  countRoles,
   selectDataUser,
   insertDataUser,
   updateDataUser,

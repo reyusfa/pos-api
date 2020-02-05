@@ -1,5 +1,6 @@
 const {
   selectAllCategories,
+  countCategories,
   selectDataCategory,
   insertDataCategory,
   updateDataCategory,
@@ -8,14 +9,33 @@ const {
 
 const {
   jsonResponse,
+  jsonResponseWithPagination,
   jsonError,
   errorBadRequest
 } = require('../helper');
 
 const getAllCategories = async (req, res) => {
   const urlQueries = req.query;
-  const result = await selectAllCategories(urlQueries);
-  return jsonResponse(res, result);
+  const result = await selectAllCategories(urlQueries).then(categories => {
+    return categories.map(category => {
+      return {
+        ...category
+      }
+    });
+  }).catch(console.log);
+  delete urlQueries.page
+  const count = await countCategories(urlQueries)
+  .catch(console.log);
+  const limit = req.query.limit ? parseInt(req.query.limit) : 100;
+  const page = req.query.page ? parseInt(req.query.page) : 1;
+  const total_page = Math.ceil(count.total_items / limit);
+  const pagination = {
+    ...count,
+    page,
+    limit,
+    total_page
+  };
+  return jsonResponseWithPagination(res, result, pagination);
 };
 
 const getCategory = async (req, res) => {

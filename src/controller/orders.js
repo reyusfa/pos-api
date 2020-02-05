@@ -22,8 +22,13 @@ const {
 } = require('../models/orders');
 
 const {
+  selectDataProduct,
   selectProductPrice
 } = require('../models/products');
+
+const {
+  selectDataUser
+} = require('../models/users');
 
 const {
   jsonResponse,
@@ -33,8 +38,20 @@ const {
 
 const getAllOrders = async (req, res) => {
   const urlQueries = req.query;
-  const result = await selectAllOrders(urlQueries);
-  return jsonResponse(res, result);
+  await selectAllOrders(urlQueries)
+  .then(order => {
+    Promise.all(order.map(async item => {
+      const user = await selectDataUser(item.user_id)
+      .then(u => {return {...u}});
+      return {
+        ...item,
+        user_name: user.name
+      }
+    }))
+    .then(result => {
+      return jsonResponse(res, result);
+    });
+  });
 };
 
 const getOrder = async (req, res) => {
@@ -72,7 +89,7 @@ const postOrder = async (req, res) => {
       const { price } = selectPrice;
       const subtotal = quantity * price;
       total += subtotal;
-      const items = {
+      let items = {
         order_id: id,
         product_id,
         quantity,
@@ -80,16 +97,23 @@ const postOrder = async (req, res) => {
         subtotal
       };
       await insertDataOrderItem(items);
+      await selectDataProduct(order.product_id).then(product => {
+        items = {
+          ...items,
+          product_name: product.name
+        }
+      });
       dataOrderDetails.push(items);
     })).then(async () => {
+      const user = await selectDataUser(dataOrders.user_id);
       const result = {
         id,
         ...dataOrders,
+        user_name: user.name,
         total,
         orders: dataOrderDetails
       };
       await updateDataOrder({ total }, id);
-      console.log(result);
       return jsonResponse(res, result);
     }).catch(error => {
       throw new Error(error);
