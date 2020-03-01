@@ -13,12 +13,14 @@ const {
   deleteUser
 } = require('../controller/users');
 
+const { uploadFile } = require('../middleware/files');
+
 Router
   .get('/', getAllUsers)
   .get('/roles', getAllRoles)
   .get('/:id', getUser)
-  .post('/', asyncHandler(userValidation), postUser)
-  .put('/:id', putUser)
+  .post('/', uploadFile('image'), asyncHandler(userValidation), postUser)
+  .put('/:id', uploadFile('image'), putUser)
   .delete('/:id', deleteUser);
 
 module.exports = Router;

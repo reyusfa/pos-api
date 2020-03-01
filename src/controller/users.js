@@ -25,9 +25,10 @@ const getAllUsers = async (req, res) => {
     return users.map(user => {
       return {
         id: user.id,
-        name: user.name,
         username: user.username,
         email: user.email,
+        name: user.name,
+        image: `http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/${user.image}`,
         role_id: user.role_id,
         role_name: user.role_name,
         created_at: user.created_at,
@@ -70,21 +71,33 @@ const getAllRoles = async (req, res) => {
 
 const getUser = async (req, res) => {
   const { id } = req.params;
-  const result = await selectDataUser(id);
+  const result = await selectDataUser(id).then(user => {
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      name: user.name,
+      image: `http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/${user.image}`,
+      created_at: user.created_at,
+      updated_at: user.updated_at
+    }
+  }).catch(console.log);
+
   return jsonResponse(res, result);
 };
 
 const postUser = async (req, res) => {
   try {
-    const { username, password, email, role_id, name } = req.body;
+    const { username, password, email, name, image, role_id } = req.body;
     const data = {
       username,
       email,
-      role_id,
       name,
+      image: (req.file ? req.file.path : ''),
+      role_id,
       password: await bcrypt.hash(password, 10)
     };
-    const query = await insertDataUser(data);
+    const query = await insertDataUser(data).catch(console.log);
     const id = query.insertId;
     const result = {
       id,
@@ -101,16 +114,20 @@ const putUser = async (req, res) => {
   try {
     let data = req.body;
     const { id } = req.params;
-        console.log(id)
+    if(req.file) {
+      data.image = req.file.path;
+    }
+    if(data.image) {
+      data.image = data.image;
+    }
     await selectDataUser(id).then(async user => {
-        console.log(user)
       if(user.id) {
         if(data.password && data.password !== '') {
           data.password = await bcrypt.hash(data.password, 10)
         } else {
           delete data.password;
         }
-        await updateDataUser(data, id);
+        await updateDataUser(data, id).catch(console.log);
         const result = {
           id,
           ...data
@@ -119,12 +136,14 @@ const putUser = async (req, res) => {
       } else {
         return jsonError(res, errorBadRequest);
       }
-    }).catch(() =>  {
-      const error = {
-        code: 400,
-        message: `Data User does not exist!`
-      };
-      return jsonError(res, error);
+    }).catch(error =>  {
+      if(error) {
+        const error = {
+          code: 400,
+          message: `Data User does not exist!`
+        };
+        return jsonError(res, error);
+      }
     });
   } catch(error) {
     return jsonError(res, errorBadRequest);

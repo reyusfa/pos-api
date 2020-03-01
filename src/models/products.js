@@ -91,7 +91,6 @@ const selectProductPrice = (id) => {
 };
 
 const updateDataProduct = (data, id) => {
-  console.log(data);
   const query = `UPDATE products SET ? WHERE id = ?`;
   const result = selectProductImage(id).then(res => {
     const { image } = res;

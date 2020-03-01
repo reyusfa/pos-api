@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const {
   selectUserLogin,
   insertUserRegister
@@ -26,13 +28,15 @@ const loginUser = async (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { username, password, email, name } = req.body;
-    const newPassword = password //await bcrypt.hash(password, 10);
+    const { username, password, email, name, image, role_id } = req.body;
     const data = {
       username,
       email,
       name,
-      password: newPassword
+      ...(req.file ? {image: (req.file ? req.file.path : '')} : {image: ''}),
+      ...(image ? {image: (image ? image : '')} : {image: ''}),
+      role_id,
+      password: await bcrypt.hash(password, 10)
     };
     const query = await insertUserRegister(data);
     const id = query.insertId;

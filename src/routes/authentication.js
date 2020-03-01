@@ -9,8 +9,10 @@ const {
   registerUser
 } = require('../controller/authentication');
 
+const { uploadFile } = require('../middleware/files');
+
 Router
   .post('/login', loginUser)
-  .post('/register', asyncHandler(userValidation), registerUser);
+  .post('/register', uploadFile('image'), asyncHandler(userValidation), registerUser);
 
 module.exports = Router;

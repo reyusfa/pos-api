@@ -6,7 +6,7 @@ const {
   sortQueries
 } = require('../helper');
 
-const allowedFields = ['reference'];
+const allowedFields = ['reference', 'user_id'];
 
 const selectAllOrders = (urlQueries) => {
   const queryParams = filterQueries(urlQueries, allowedFields) + sortQueries(urlQueries) + paginationQueries(urlQueries);

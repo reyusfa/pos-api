@@ -1,6 +1,8 @@
+const fs = require('fs');
 const connection = require('../config/mysql');
 
 const {
+  dbQuery,
   filterQueries,
   paginationQueries,
   sortQueries
@@ -19,6 +21,7 @@ const selectAllUsers = (urlQueries) => {
       u.username,
       u.email,
       u.name,
+      u.image,
       u.created_at,
       u.updated_at,
       u.role_id,
@@ -91,7 +94,7 @@ const countRoles = (urlQueries) => {
 };
 
 const selectDataUser = (id) => {
-  const query = `SELECT id, username, email, name, created_at, updated_at FROM users WHERE id = ?`;
+  const query = `SELECT id, username, email, name, image, created_at, updated_at FROM users WHERE id = ?`;
   return new Promise((resolve, reject) => {
     connection
       .query(query, [id], (error, result) => {
@@ -107,6 +110,7 @@ const selectDataUser = (id) => {
 
 const insertDataUser = (data) => {
   const query = `INSERT INTO users SET ?`;
+  console.log(query)
   return new Promise((resolve, reject) => {
     connection
       .query(query, [data], (error, result) => {
@@ -120,34 +124,53 @@ const insertDataUser = (data) => {
   });
 };
 
+const selectUserImage = (id) => {
+  const query = `SELECT image FROM users WHERE id = ?`;
+  return new Promise((resolve, reject) => {
+    connection.query(query, [id], (error, result) => {
+      if(!error) {
+        resolve(result[0]);
+      }
+    }).on('error', (error) => {
+      reject(new Error(error));
+    });
+  });
+};
+
 const updateDataUser = (data, id) => {
   const query = `UPDATE users SET ? WHERE id = ?`;
-  return new Promise((resolve, reject) => {
-    connection
-      .query(query, [data, id], (error, result) => {
-        if (!error) {
-          resolve(result);
-        }
-      })
-      .on('error', error => {
-        reject(new Error(error));
+  const result = selectUserImage(id).then(res => {
+    const { image } = res;
+    if(image && image !== '' && data.image && fs.existsSync(image)) {
+      fs.unlink(image, (error) => {
+        if(error) throw new Error(error);
       });
+    }
+    return dbQuery(connection, query, [data, id]).catch(error => {
+      throw new Error(error);
+    });
+  }).catch(error => {
+    throw new Error(error);
   });
+  return result;
 };
 
 const deleteDataUser = (id) => {
   const query = `DELETE FROM users WHERE id = ?`;
-  return new Promise((resolve, reject) => {
-    connection
-      .query(query, [id], (error, result) => {
-        if (!error) {
-          resolve(result);
-        }
-      })
-      .on('error', error => {
-        reject(new Error(error));
+  const result = selectUserImage(id).then(res => {
+    const { image } = res;
+    if(image && image !== '' && fs.existsSync(image)) {
+      fs.unlink(image, (error) => {
+        if(error) throw new Error(error);
       });
+    }
+    return dbQuery(connection, query, [id]).catch(error => {
+      throw new Error(error);
+    });
+  }).catch(error => {
+    throw new Error(error);
   });
+  return result;
 };
 
 const checkUsername = (match) => {
@@ -216,6 +239,7 @@ module.exports = {
   countRoles,
   selectDataUser,
   insertDataUser,
+  selectUserImage,
   updateDataUser,
   deleteDataUser,
   selectIdUser,
