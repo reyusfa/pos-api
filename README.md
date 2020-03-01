@@ -155,11 +155,7 @@ Supported query parameters:
 
 ##### Request Header
 ```
-Content-Type: application/x-www-form-urlencoded
-```
-or
-```
-Content-Type: application/json
+Content-Type: multipart/form-data
 ```
 
 ##### Example Request:
@@ -168,6 +164,7 @@ Content-Type: application/json
   "name": "Orange Juice",
   "price": 3000,
   "category_id": 1,
+  "image": "", //optional
   "description": "Fresh Orange Juice"
 }
 ```
@@ -178,11 +175,7 @@ Content-Type: application/json
 
 ##### Request Header
 ```
-Content-Type: application/x-www-form-urlencoded
-```
-or
-```
-Content-Type: application/json
+Content-Type: multipart/form-data
 ```
 
 ##### Example Request:
@@ -435,32 +428,92 @@ Content-Type: application/json
 }
 ```
 
-## Work in Progress
-
 ### Users
 
-#### ~~Show all data users~~
+#### Show all data users
 
-~~**`GET`** `/users`~~
+**`GET`** `/users`
 
-#### ~~Show data user by id~~
+#### Show data user by id
 
-~~**`GET`** `/users/:id`~~
+**`GET`** `/users/:id`
 
-#### ~~Update data user by id~~
+#### Update data user by id
 
-~~**`PUT`** `/users/:id`~~
+**`PUT`** `/users/:id`
 
-#### ~~Delete data user by id~~
+#### Delete data user by id
 
-~~**`DELETE`** `/users/:id`~~
+**`DELETE`** `/users/:id`
 
 ### Login & Register
 
-#### ~~Register user~~
+#### Register user
 
-~~**`POST`** `/register`~~
+**`POST`** `/register`
 
-#### ~~Login user~~
+##### Request Header
+```
+Content-Type: multipart/form-data
+```
 
-~~**`POST`** `/login`~~
+##### Example Request:
+```json
+{
+    "username": "badmin",
+    "password": "badmin",
+    "email": "badmin@email.com",
+    "name": "Badmin",
+    "image": "", //optional
+    "role_id": 1
+}
+```
+
+##### Example Request:
+```json
+{
+  "status": 200,
+  "data": {
+    "id": 23,
+    "username": "badmin",
+    "email": "badmin@email.com",
+    "name": "Badmin",
+    "image": "",
+    "role_id": 1
+  }
+}
+```
+
+#### Login user
+
+**`POST`** `/login`
+
+##### Request Header
+```
+Content-Type: application/x-www-form-urlencoded
+```
+or
+```
+Content-Type: application/json
+```
+
+##### Example Request:
+```json
+{
+  "username": "admin",
+  "password": "admin"
+}
+```
+
+##### Example Request:
+```json
+{
+  "status": 200,
+  "data": {
+    "token": "TOKEN",
+    "id": 1,
+    "role_id": 1,
+    "name": "Admin"
+  }
+}
+```
