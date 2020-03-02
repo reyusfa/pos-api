@@ -28,7 +28,7 @@ const getAllUsers = async (req, res) => {
         username: user.username,
         email: user.email,
         name: user.name,
-        image: `http://${process.env.PUBLIC_IMAGES}/${user.image}`,
+        image: `${process.env.PUBLIC_IMAGES}/${user.image}`,
         role_id: user.role_id,
         role_name: user.role_name,
         created_at: user.created_at,
@@ -77,7 +77,7 @@ const getUser = async (req, res) => {
       username: user.username,
       email: user.email,
       name: user.name,
-      image: `http://${process.env.PUBLIC_IMAGES}/${user.image}`,
+      image: `${process.env.PUBLIC_IMAGES}/${user.image}`,
       created_at: user.created_at,
       updated_at: user.updated_at
     }

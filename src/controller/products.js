@@ -21,7 +21,7 @@ const getAllProducts = async (req, res) => {
     return products.map(product => {
       return {
         ...product,
-        image: `http://${process.env.PUBLIC_IMAGES}/${product.image}`,
+        image: `${process.env.PUBLIC_IMAGES}/${product.image}`,
       }
     });
   }).catch(console.log);
