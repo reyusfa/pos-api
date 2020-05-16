@@ -12,6 +12,15 @@ This project created for learning purpose of how to make an API using nodejs and
 
 Make sure to install the latest version.
 
+### Clone Project
+
+Clone and install dependencies
+```shell
+> git clone https://github.com/reyusfa/pos-api.git
+> cd pos-api
+> yarn install
+```
+
 ### Setting Server & Database
 
 1. Install XAMPP / MySQL.
@@ -20,28 +29,27 @@ Make sure to install the latest version.
 4. Edit file .env to configure Server & MySQL connection.
 
 ```
-SERVER_HOST=127.0.0.1
 SERVER_PORT=3001
+SERVER_HOST=127.0.0.1
 DB_HOST=127.0.0.1
 DB_NAME=point_of_sale
 DB_USERNAME=root
 DB_PASSWORD=
+PUBLIC_IMAGES=http://localhost:3001
+SECRET_KEY=SECRET_KEY
 ```
 
 ### Start Server
 
-Clone and install dependencies
-```shell
-> git clone https://github.com/reyusfa/pos-api.git
-> cd pos-api
-> yarn install
-```
-Start the server
 ```shell
 > yarn start
 now listening on http://127.0.0.1:3001
 now connected to database...
 ```
+
+## Demo
+
+[GET /products](http://3.87.58.95:3001/products)
 
 ## Folder Structures
 
