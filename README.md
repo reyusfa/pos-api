@@ -5,12 +5,10 @@ This project created for learning purpose of how to make an API using nodejs and
 ## Getting Started
 
 ### Requirements
-  - NodeJS
-  - NPM
-  - Yarn
-  - XAMPP / MySQL
-
-Make sure to install the latest version.
+  - Node.js (tested on v14.15.3)
+  - NPM (tested on v6.14.9)
+  - Yarn (tested on v1.22.5)
+  - MySQL 5 (tested on v5.7.37)
 
 ### Clone Project
 
@@ -23,7 +21,7 @@ Clone and install dependencies
 
 ### Setting Server & Database
 
-1. Install XAMPP / MySQL.
+1. Install MySQL.
 2. Create new database.
 3. Import file `point_of_sale.sql` to your database.
 4. Edit file .env to configure Server & MySQL connection.
@@ -46,10 +44,6 @@ SECRET_KEY=SECRET_KEY
 now listening on http://127.0.0.1:3001
 now connected to database...
 ```
-
-## Demo
-
-[GET /products](http://3.87.58.95:3001/products)
 
 ## Folder Structures
 
@@ -85,6 +79,76 @@ now connected to database...
 
 ## API Documentation
 
+### Login & Register
+
+#### Login user
+
+**`POST`** `/login`
+
+##### Request Header:
+```
+Content-Type: application/json [OR] application/x-www-form-urlencoded
+Authorization: TOKEN
+```
+
+##### Request Body:
+```json
+{
+  "username": "admin",
+  "password": "admin"
+}
+```
+
+##### Response:
+```json
+{
+  "status": 200,
+  "data": {
+    "token": "TOKEN",
+    "id": 1,
+    "role_id": 1,
+    "name": "Admin"
+  }
+}
+```
+
+#### Register user
+
+**`POST`** `/register`
+
+##### Request Header:
+```
+Content-Type: multipart/form-data
+Authorization: TOKEN
+```
+
+##### Request Body:
+```json
+{
+    "username": "badmin",
+    "password": "badmin",
+    "email": "badmin@email.com",
+    "name": "Badmin",
+    "image": "", //optional
+    "role_id": 1
+}
+```
+
+##### Response:
+```json
+{
+  "status": 200,
+  "data": {
+    "id": 23,
+    "username": "badmin",
+    "email": "badmin@email.com",
+    "name": "Badmin",
+    "image": "",
+    "role_id": 1
+  }
+}
+```
+
 ### Products
 
 Endpoint list
@@ -94,11 +158,11 @@ Endpoint list
 - **`PUT`** `/products/:id`
 - **`DELETE`** `/products/:id`
 
-#### Show all data products
+#### Show all products
 
 **`GET`** ` /products` 
 
-##### Example Response:
+##### Response:
 ```json
 {
   "code": 200,
@@ -136,11 +200,11 @@ Supported query parameters:
 - `?limit=10&page=2`
 - `?limit=10&offset=30`
 
-#### Show data product by id
+#### Show product by id
 
 **`GET`** `/products/:id`
 
-##### Example Response:
+##### Response:
 ```json
 {
   "code": 200,
@@ -157,16 +221,17 @@ Supported query parameters:
 }
 ```
 
-#### Add data product
+#### Add product
 
 **`POST`** `/products`
 
-##### Request Header
+##### Request Header:
 ```
 Content-Type: multipart/form-data
+Authorization: TOKEN
 ```
 
-##### Example Request:
+##### Request Body:
 ```json
 {
   "name": "Orange Juice",
@@ -177,40 +242,31 @@ Content-Type: multipart/form-data
 }
 ```
 
-#### Update data product by id
+#### Update product by id
 
 **`PUT`** `/products/:id`
 
-##### Request Header
+##### Request Header:
 ```
 Content-Type: multipart/form-data
+Authorization: TOKEN
 ```
 
-##### Example Request:
+##### Request Body:
 ```json
 {
   "price": 3000,
 }
 ```
 
-#### Delete data product by id
+#### Delete product by id
 
 **`DELETE`** `/products/:id`
 
-##### Request Header
+##### Request Header:
 ```
-Content-Type: application/x-www-form-urlencoded
-```
-or
-```
-Content-Type: application/json
-```
-
-##### Example Request:
-```json
-{
-  "id": 1
-}
+Content-Type: application/json [OR] application/x-www-form-urlencoded
+Authorization: TOKEN
 ```
 
 ### Categories
@@ -222,11 +278,11 @@ Endpoint list:
 - **`PUT`** `/categories/:id`
 - **`DELETE`** `/categories/:id`
 
-#### Show all data categories
+#### Show all categories
 
 **`GET`** `/categories`
 
-##### Example Response:
+##### Response:
 ```json
 {
   "code": 200,
@@ -247,11 +303,11 @@ Endpoint list:
 }
 ```
 
-#### Show data category by id
+#### Show category by id
 
 **`GET`** `/categories/:id`
 
-##### Example Response:
+##### Response:
 ```json
 {
   "code": 200,
@@ -264,64 +320,48 @@ Endpoint list:
 }
 ```
 
-#### Add data category
+#### Add category
 
 **`POST`** `/categories`
 
-##### Request Header
+##### Request Header:
 ```
-Content-Type: application/x-www-form-urlencoded
-```
-or
-```
-Content-Type: application/json
+Content-Type: application/json [OR] application/x-www-form-urlencoded
+Authorization: TOKEN
 ```
 
-##### Example Request:
+##### Request Body:
 ```json
 {
   "name": "Snack"
 }
 ```
 
-#### Edit data category by id
+#### Edit category by id
 
 **`PUT`** `/categories/:id`
 
-##### Request Header
+##### Request Header:
 ```
-Content-Type: application/x-www-form-urlencoded
-```
-or
-```
-Content-Type: application/json
+Content-Type: application/json [OR] application/x-www-form-urlencoded
+Authorization: TOKEN
 ```
 
-##### Example Request:
+##### Request Body:
 ```json
 {
   "name": "Coklat"
 }
 ```
 
-#### Delete data category by id
+#### Delete category by id
 
 **`DELETE`** `/categories/:id`
 
-##### Request Header
+##### Request Header:
 ```
-Content-Type: application/x-www-form-urlencoded
-```
-or
-```
-Content-Type: application/json
-```
-
-##### Example Request:
-```json
-{
-  "id": 1
-}
+Content-Type: application/json [OR] application/x-www-form-urlencoded
+Authorization: TOKEN
 ```
 
 ### Orders
@@ -334,11 +374,11 @@ Endpoint list:
 - **`POST`** `/orders`
 - **`DELETE`** `/orders/:id`
 
-#### Show all data orders
+#### Show all orders
 
 **`GET`** `/orders`
 
-##### Example Response:
+##### Response:
 ```json
 {
   "code": 200,
@@ -363,11 +403,11 @@ Endpoint list:
 }
 ```
 
-#### Show data order by id
+#### Show order by id
 
 **`GET`** `/orders/:id`
 
-##### Example Response:
+##### Response:
 ```json
 {
   "code": 200,
@@ -390,16 +430,17 @@ Endpoint list:
 
 **`GET`** `/orders/:id/items/:id_item`
 
-#### Add data order
+#### Add order
 
 **`POST`** `/orders`
 
-##### Request Header
+##### Request Header:
 ```
-Content-Type: application/json
+Content-Type: application/json [OR] application/x-www-form-urlencoded
+Authorization: TOKEN
 ```
 
-##### Example Request:
+##### Request Body:
 ```json
 {
   "user_id": 1,
@@ -416,112 +457,30 @@ Content-Type: application/json
 }
 ```
 
-#### Delete data order
+#### Delete order by id
 
 **`DELETE`** `/orders/:id`
 
-##### Request Header
+##### Request Header:
 ```
-Content-Type: application/x-www-form-urlencoded
-```
-or
-```
-Content-Type: application/json
-```
-
-##### Example Request:
-```json
-{
-  "id": 1
-}
+Content-Type: application/json [OR] application/x-www-form-urlencoded
+Authorization: TOKEN
 ```
 
 ### Users
 
-#### Show all data users
+#### Show all users
 
 **`GET`** `/users`
 
-#### Show data user by id
+#### Show user by id
 
 **`GET`** `/users/:id`
 
-#### Update data user by id
+#### Update user by id
 
 **`PUT`** `/users/:id`
 
-#### Delete data user by id
+#### Delete user by id
 
 **`DELETE`** `/users/:id`
-
-### Login & Register
-
-#### Register user
-
-**`POST`** `/register`
-
-##### Request Header
-```
-Content-Type: multipart/form-data
-```
-
-##### Example Request:
-```json
-{
-    "username": "badmin",
-    "password": "badmin",
-    "email": "badmin@email.com",
-    "name": "Badmin",
-    "image": "", //optional
-    "role_id": 1
-}
-```
-
-##### Example Request:
-```json
-{
-  "status": 200,
-  "data": {
-    "id": 23,
-    "username": "badmin",
-    "email": "badmin@email.com",
-    "name": "Badmin",
-    "image": "",
-    "role_id": 1
-  }
-}
-```
-
-#### Login user
-
-**`POST`** `/login`
-
-##### Request Header
-```
-Content-Type: application/x-www-form-urlencoded
-```
-or
-```
-Content-Type: application/json
-```
-
-##### Example Request:
-```json
-{
-  "username": "admin",
-  "password": "admin"
-}
-```
-
-##### Example Request:
-```json
-{
-  "status": 200,
-  "data": {
-    "token": "TOKEN",
-    "id": 1,
-    "role_id": 1,
-    "name": "Admin"
-  }
-}
-```
